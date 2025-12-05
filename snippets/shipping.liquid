@@ -20,19 +20,18 @@
   margin-bottom: 0;
 }
 </style>
-
 {% assign today = 'now' | date: "%s" %}
 {% assign seconds_in_day = 86400 %}
 
 {%- comment -%} Delivery date calculations {%- endcomment -%}
-{% assign dncr_start = today | plus: seconds_in_day*2 | date: "%b %d" %}
-{% assign dncr_end = today | plus: seconds_in_day*3 | date: "%b %d" %}
+{% assign dncr_start = today | plus: seconds_in_day | plus: seconds_in_day | date: "%b %d" %}
+{% assign dncr_end = today | plus: seconds_in_day | plus: seconds_in_day | plus: seconds_in_day | date: "%b %d" %}
 
-{% assign pan_start = today | plus: seconds_in_day*5 | date: "%b %d" %}
-{% assign pan_end = today | plus: seconds_in_day*7 | date: "%b %d" %}
+{% assign pan_start = today | plus: seconds_in_day | times: 5 | date: "%b %d" %}
+{% assign pan_end = today | plus: seconds_in_day | times: 7 | date: "%b %d" %}
 
-{% assign intl_start = today | plus: seconds_in_day*15 | date: "%b %d" %}
-{% assign intl_end = today | plus: seconds_in_day*25 | date: "%b %d" %}
+{% assign intl_start = today | plus: seconds_in_day | times: 15 | date: "%b %d" %}
+{% assign intl_end = today | plus: seconds_in_day | times: 25 | date: "%b %d" %}
 
 <div class="delivery-box">
   <div class="delivery-row">
