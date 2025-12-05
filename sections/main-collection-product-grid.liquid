@@ -153,37 +153,124 @@
               "
             >
               {% assign skip_card_product_styles = false %}
+              {% assign card_index = 0 %}
               {%- for product in collection.products -%}
-                {% assign lazy_load = false %}
-                {%- if forloop.index > 2 -%}
-                  {%- assign lazy_load = true -%}
+                {%- if product.has_only_default_variant -%}
+                  {%- assign card_index = card_index | plus: 1 -%}
+                  {% assign lazy_load = false %}
+                  {%- if card_index > 2 -%}
+                    {%- assign lazy_load = true -%}
+                  {%- endif -%}
+                  <li
+                    class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                    {% if settings.animations_reveal_on_scroll %}
+                      data-cascade
+                      style="--animation-order: {{ card_index }};"
+                    {% endif %}
+                  >
+                    {% render 'custom-product-card',
+                      card_product: product,
+                      media_aspect_ratio: section.settings.image_ratio,
+                      image_shape: section.settings.image_shape,
+                      show_secondary_image: section.settings.show_secondary_image,
+                      show_vendor: section.settings.show_vendor,
+                      show_rating: section.settings.show_rating,
+                      lazy_load: lazy_load,
+                      skip_styles: skip_card_product_styles,
+                      quick_add: section.settings.quick_add,
+                      section_id: section.id
+                    %}
+                  </li>
+                  {%- assign skip_card_product_styles = true -%}
+                {%- else -%}
+                  {%- comment -%}Check if product has Color option{%- endcomment -%}
+                  {%- assign has_color_option = false -%}
+                  {%- assign color_option_index = 0 -%}
+                  {%- for option in product.options_with_values -%}
+                    {%- assign option_name_downcase = option.name | downcase -%}
+                    {%- if option_name_downcase == 'color' or option_name_downcase == 'colour' -%}
+                      {%- assign has_color_option = true -%}
+                      {%- assign color_option_index = forloop.index0 -%}
+                      {%- break -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  
+                  {%- if has_color_option -%}
+                    {%- comment -%}Group variants by color and show one card per color{%- endcomment -%}
+                    {%- assign shown_colors = '' -%}
+                    {%- for variant in product.variants -%}
+                      {%- assign variant_color = variant.options[color_option_index] -%}
+                      {%- unless shown_colors contains variant_color -%}
+                        {%- assign shown_colors = shown_colors | append: variant_color | append: ',' -%}
+                        {%- assign card_index = card_index | plus: 1 -%}
+                        {% assign lazy_load = false %}
+                        {%- if card_index > 2 -%}
+                          {%- assign lazy_load = true -%}
+                        {%- endif -%}
+                        <li
+                          class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                          {% if settings.animations_reveal_on_scroll %}
+                            data-cascade
+                            style="--animation-order: {{ card_index }};"
+                          {% endif %}
+                        >
+                          {% render 'custom-product-card',
+                            card_product: product,
+                            card_variant: variant,
+                            media_aspect_ratio: section.settings.image_ratio,
+                            image_shape: section.settings.image_shape,
+                            show_secondary_image: section.settings.show_secondary_image,
+                            show_vendor: section.settings.show_vendor,
+                            show_rating: section.settings.show_rating,
+                            lazy_load: lazy_load,
+                            skip_styles: skip_card_product_styles,
+                            quick_add: section.settings.quick_add,
+                            section_id: section.id
+                          %}
+                        </li>
+                        {%- assign skip_card_product_styles = true -%}
+                      {%- endunless -%}
+                    {%- endfor -%}
+                  {%- else -%}
+                    {%- comment -%}No color option, show as regular product{%- endcomment -%}
+                    {%- assign card_index = card_index | plus: 1 -%}
+                    {% assign lazy_load = false %}
+                    {%- if card_index > 2 -%}
+                      {%- assign lazy_load = true -%}
+                    {%- endif -%}
+                    <li
+                      class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                      {% if settings.animations_reveal_on_scroll %}
+                        data-cascade
+                        style="--animation-order: {{ card_index }};"
+                      {% endif %}
+                    >
+                      {% render 'custom-product-card',
+                        card_product: product,
+                        media_aspect_ratio: section.settings.image_ratio,
+                        image_shape: section.settings.image_shape,
+                        show_secondary_image: section.settings.show_secondary_image,
+                        show_vendor: section.settings.show_vendor,
+                        show_rating: section.settings.show_rating,
+                        lazy_load: lazy_load,
+                        skip_styles: skip_card_product_styles,
+                        quick_add: section.settings.quick_add,
+                        section_id: section.id
+                      %}
+                    </li>
+                    {%- assign skip_card_product_styles = true -%}
+                  {%- endif -%}
                 {%- endif -%}
-                <li
-                  class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-                  {% if settings.animations_reveal_on_scroll %}
-                    data-cascade
-                    style="--animation-order: {{ forloop.index }};"
-                  {% endif %}
-                >
-                  {% render 'custom-product-card',
-                    card_product: product,
-                    media_aspect_ratio: section.settings.image_ratio,
-                    image_shape: section.settings.image_shape,
-                    show_secondary_image: section.settings.show_secondary_image,
-                    show_vendor: section.settings.show_vendor,
-                    show_rating: section.settings.show_rating,
-                    lazy_load: lazy_load,
-                    skip_styles: skip_card_product_styles,
-                    quick_add: section.settings.quick_add,
-                    section_id: section.id
-                  %}
-                </li>
-                {%- assign skip_card_product_styles = true -%}
               {%- endfor -%}
             </ul>
 
             {%- if paginate.pages > 1 -%}
-              {% render 'pagination', paginate: paginate, anchor: '' %}
+              <div class="pagination-wrapper" id="pagination-{{ section.id }}" style="opacity: 0; height: 1px; overflow: hidden;">
+                {% render 'pagination', paginate: paginate, anchor: '' %}
+              </div>
+              <div class="infinite-scroll-loading" id="infinite-loading-{{ section.id }}" style="display: none; text-align: center; padding: 20px;">
+                <div class="loading-spinner">Loading more products...</div>
+              </div>
             {%- endif -%}
           </div>
         {%- endif -%}
@@ -193,6 +280,129 @@
   {% if section.settings.image_shape == 'arch' %}
     {{ 'mask-arch.svg' | inline_asset_content }}
   {%- endif -%}
+
+  <script>
+    (function() {
+      const sectionId = '{{ section.id }}';
+      const productGrid = document.getElementById('product-grid');
+      const paginationWrapper = document.getElementById('pagination-' + sectionId);
+      const loadingIndicator = document.getElementById('infinite-loading-' + sectionId);
+      
+      if (!paginationWrapper) return; // No pagination, no infinite scroll needed
+      
+      let isLoading = false;
+      let currentPage = {{ paginate.current_page }};
+      const totalPages = {{ paginate.pages }};
+      
+      function getNextPageUrl() {
+        if (currentPage >= totalPages) return null;
+        
+        const nextPage = currentPage + 1;
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('page', nextPage);
+        return currentUrl.toString();
+      }
+      
+      function loadNextPage() {
+        if (isLoading || currentPage >= totalPages) return;
+        
+        const nextUrl = getNextPageUrl();
+        if (!nextUrl) return;
+        
+        isLoading = true;
+        loadingIndicator.style.display = 'block';
+        
+        fetch(nextUrl)
+          .then(response => response.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            
+            // Get new products
+            const newProducts = doc.querySelectorAll('#product-grid .grid__item');
+            
+            if (newProducts.length > 0) {
+              // Append new products to grid
+              newProducts.forEach(product => {
+                productGrid.appendChild(product.cloneNode(true));
+              });
+              
+              currentPage++;
+              
+              // Update pagination or hide it if we're on the last page
+              if (currentPage >= totalPages) {
+                paginationWrapper.style.display = 'none';
+              } else {
+                const newPagination = doc.querySelector('#pagination-' + sectionId);
+                if (newPagination) {
+                  paginationWrapper.innerHTML = newPagination.innerHTML;
+                }
+              }
+              
+              // Trigger currency conversion if needed
+              if (typeof Currency !== 'undefined' && Currency.convertAll) {
+                setTimeout(() => Currency.convertAll(shopCurrency, jQuery('[name=currencies]').val()), 100);
+              } else if (typeof BUCKS !== 'undefined' && BUCKS.refresh) {
+                setTimeout(() => BUCKS.refresh(), 100);
+              }
+            }
+            
+            isLoading = false;
+            loadingIndicator.style.display = 'none';
+          })
+          .catch(error => {
+            console.error('Error loading next page:', error);
+            isLoading = false;
+            loadingIndicator.style.display = 'none';
+          });
+      }
+      
+      // Intersection Observer for infinite scroll
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !isLoading && currentPage < totalPages) {
+            loadNextPage();
+          }
+        });
+      }, {
+        rootMargin: '200px' // Start loading 200px before reaching the pagination
+      });
+      
+      // Observe the pagination wrapper
+      observer.observe(paginationWrapper);
+    })();
+  </script>
+
+  <style>
+    .infinite-scroll-loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .loading-spinner {
+      font-size: 14px;
+      color: #666;
+      padding: 20px;
+    }
+    
+    .loading-spinner::after {
+      content: '';
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      margin-left: 10px;
+      border: 2px solid #e6e6e6;
+      border-top-color: #111;
+      border-radius: 50%;
+      animation: spinner-rotation 0.8s linear infinite;
+      vertical-align: middle;
+    }
+    
+    @keyframes spinner-rotation {
+      to { transform: rotate(360deg); }
+    }
+  </style>
 </div>
 
 {% schema %}

@@ -4,12 +4,42 @@
 
 {% liquid
   assign p = card_product | default: product
+  assign v = card_variant
   if p == null
     echo '<!-- custom-product-card: no product -->'
   endif
 
   assign uid = section_id | default: section.id | default: 's'
-  assign card_id = 'cpc-' | append: p.id | append: '-' | append: uid
+  
+  comment
+    If variant is passed, use variant-specific data
+  endcomment
+  if v
+    assign card_id = 'cpc-' | append: p.id | append: '-v-' | append: v.id | append: '-' | append: uid
+    assign price_now = v.price
+    assign price_was = v.compare_at_price
+    assign variant_available = v.available
+    if v.featured_image
+      assign card_image = v.featured_image
+    else
+      assign card_image = p.featured_image
+    endif
+    assign card_title = p.title
+    unless v.title contains 'Default'
+      assign card_title = p.title | append: ' - ' | append: v.title
+    endunless
+    assign product_url = p.url | append: '?variant=' | append: v.id
+    assign variant_id = v.id
+  else
+    assign card_id = 'cpc-' | append: p.id | append: '-' | append: uid
+    assign price_now = p.price | default: p.price_min
+    assign price_was = p.compare_at_price_max
+    assign variant_available = true
+    assign card_image = p.featured_image
+    assign card_title = p.title
+    assign product_url = p.url
+    assign variant_id = p.variants.first.id
+  endif
 
   if lazy_load == false
     assign loading_value = 'eager'
@@ -17,8 +47,6 @@
     assign loading_value = 'lazy'
   endif
 
-  assign price_now = p.price | default: p.price_min
-  assign price_was = p.compare_at_price_max
   assign has_sale = false
   if price_was and price_was > price_now
     assign has_sale = true
@@ -34,15 +62,12 @@
 
 <div class="cpc-card {% if on_collection %}cpc--collection{% endif %}" id="{{ card_id }}">
   <div class="cpc-imgwrap">
-    {% if has_sale %}
-      <span class="cpc-badge">{{ discount_pct }}% off</span>
-    {% endif %}
-    <a href="{{ p.url }}" class="cpc-imglink">
+    <a href="{{ product_url }}" class="cpc-imglink">
       <img
         class="cpc-img"
         id="{{ card_id }}-img"
-        src="{{ p.featured_image | image_url: width: 800 }}"
-        alt="{{ p.title | escape }}"
+        src="{{ card_image | image_url: width: 800 }}"
+        alt="{{ card_title | escape }}"
         loading="{{ loading_value }}"
       >
     </a>
@@ -50,21 +75,21 @@
   </div>
 
   <div class="cpc-body">
-    <h3 class="cpc-title">{{ p.title }}</h3>
+    <h3 class="cpc-title">{{ card_title }}</h3>
 
     <form method="post" action="/cart/add" class="cpc-form" id="{{ card_id }}-form">
       <!-- Price -->
       <div class="cpc-price">
         {% if has_sale %}
           <span class="cpc-price-now">
-            {{ price_now | money_without_trailing_zeros | replace: 'Rs.', '₹' | replace: 'Rs', '₹' }}
+            <span class="money" data-currency-{{ shop.currency }}>{{ price_now | money }}</span>
           </span>
           <span class="cpc-price-was">
-            {{ price_was | money_without_trailing_zeros | replace: 'Rs.', '₹' | replace: 'Rs', '₹' }}
+            <span class="money" data-currency-{{ shop.currency }}>{{ price_was | money }}</span>
           </span>
         {% else %}
           <span class="cpc-price-now">
-            {{ price_now | money_without_trailing_zeros | replace: 'Rs.', '₹' | replace: 'Rs', '₹' }}
+            <span class="money" data-currency-{{ shop.currency }}>{{ price_now | money }}</span>
           </span>
         {% endif %}
       </div>
@@ -74,26 +99,41 @@
         <div class="cpc-variants cpc-variants--inline">
           {% for option in p.options_with_values %}
             {% assign opt_handle = option.name | handleize %}
-            <select
-              id="{{ card_id }}-opt-{{ opt_handle }}"
-              class="cpc-select cpc-select--pill"
-              name="options[{{ option.name }}]"
-              data-option-index="{{ forloop.index0 }}"
-            >
-              {% for value in option.values %}
-                <option value="{{ value | escape }}">{{ value }}</option>
-              {% endfor %}
-            </select>
+            {% assign option_name_downcase = option.name | downcase %}
+            {% comment %}If showing color variant card, hide color selector but show other options like size{% endcomment %}
+            {% if v %}
+              {% unless option_name_downcase == 'color' or option_name_downcase == 'colour' %}
+                <select
+                  id="{{ card_id }}-opt-{{ opt_handle }}"
+                  class="cpc-select cpc-select--pill"
+                  name="options[{{ option.name }}]"
+                  data-option-index="{{ forloop.index0 }}"
+                >
+                  {% for value in option.values %}
+                    <option value="{{ value | escape }}">{{ value }}</option>
+                  {% endfor %}
+                </select>
+              {% endunless %}
+            {% else %}
+              <select
+                id="{{ card_id }}-opt-{{ opt_handle }}"
+                class="cpc-select cpc-select--pill"
+                name="options[{{ option.name }}]"
+                data-option-index="{{ forloop.index0 }}"
+              >
+                {% for value in option.values %}
+                  <option value="{{ value | escape }}">{{ value }}</option>
+                {% endfor %}
+              </select>
+            {% endif %}
           {% endfor %}
         </div>
-      {% endunless %}
-
-      <input type="hidden" name="id" value="{{ p.variants.first.id }}">
+      {% endunless %}      <input type="hidden" name="id" value="{{ variant_id }}">
 
       <!-- Buttons -->
       <div class="cpc-actions">
-        <button type="submit" name="add" class="cpc-btn cpc-btn--outline">Add to Cart</button>
-        <a class="cpc-btn cpc-btn--solid" id="{{ card_id }}-buynow" href="/cart/{{ p.variants.first.id }}:1">Buy Now</a>
+        <button type="submit" name="add" class="cpc-btn cpc-btn--outline" {% if v and variant_available == false %}disabled{% endif %}>{% if v and variant_available == false %}Sold Out{% else %}Add to Cart{% endif %}</button>
+        <a class="cpc-btn cpc-btn--solid" id="{{ card_id }}-buynow" href="/cart/{{ variant_id }}:1">Buy Now</a>
       </div>
     </form>
   </div>
@@ -126,6 +166,23 @@
       if (variant.featured_image && imgEl) imgEl.src = variant.featured_image.src;
     }
     selects.forEach((s) => s.addEventListener('change', syncVariant));
+
+    // Trigger currency conversion for Buckss/BUCKS or similar apps
+    function triggerCurrencyConversion() {
+      // Try multiple common currency converter triggers
+      if (typeof Currency !== 'undefined' && Currency.convertAll) {
+        Currency.convertAll(shopCurrency, jQuery('[name=currencies]').val());
+      } else if (typeof BUCKS !== 'undefined' && BUCKS.refresh) {
+        BUCKS.refresh();
+      } else if (window.currencyConverter && window.currencyConverter.convertAll) {
+        window.currencyConverter.convertAll();
+      }
+    }
+
+    // Trigger conversion after a short delay to ensure converter is loaded
+    setTimeout(triggerCurrencyConversion, 100);
+    // Also trigger on window load
+    window.addEventListener('load', triggerCurrencyConversion);
   })();
 </script>
 
