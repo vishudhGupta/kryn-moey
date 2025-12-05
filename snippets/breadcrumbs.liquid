@@ -1,0 +1,168 @@
+{%- comment -%}
+  Accessible breadcrumbs for Dawn
+  - Works on: product, collection, page, blog, article, search, cart, customer pages
+  - Hides on index (home)
+{%- endcomment -%}
+
+{%- if template.name != 'index' -%}
+
+<nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+  <ol class="breadcrumbs__list" itemscope itemtype="https://schema.org/BreadcrumbList">
+    {%- assign pos = 1 -%}
+
+    {%- comment %} Home {% endcomment -%}
+    <li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <a class="breadcrumbs__link" href="{{ routes.root_url }}" itemprop="item">
+        <span itemprop="name">{{ 'general.breadcrumbs.home' | t | default: 'Home' }}</span>
+      </a>
+      <meta itemprop="position" content="{{ pos }}">{% assign pos = pos | plus: 1 %}
+    </li>
+
+    {%- case template.name -%}
+      {%- when 'collection' -%}
+        <li class="breadcrumbs__item is-current" aria-current="page" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a class="breadcrumbs__link" href="{{ collection.url }}" itemprop="item">
+            <span itemprop="name">{{ collection.title }}</span>
+          </a>
+          <meta itemprop="position" content="{{ pos }}">
+        </li>
+
+      {%- when 'product' -%}
+        {%- assign bc_collection = collection | default: product.collections.first -%}
+        {%- if bc_collection -%}
+          <li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a class="breadcrumbs__link" href="{{ bc_collection.url }}" itemprop="item">
+              <span itemprop="name">{{ bc_collection.title }}</span>
+            </a>
+            <meta itemprop="position" content="{{ pos }}">{% assign pos = pos | plus: 1 %}
+          </li>
+        {%- endif -%}
+        <li class="breadcrumbs__item is-current" aria-current="page" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a class="breadcrumbs__link" href="{{ product.url }}" itemprop="item">
+            <span itemprop="name">{{ product.title }}</span>
+          </a>
+          <meta itemprop="position" content="{{ pos }}">
+        </li>
+
+      {%- when 'blog' -%}
+        <li class="breadcrumbs__item is-current" aria-current="page" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a class="breadcrumbs__link" href="{{ blog.url }}" itemprop="item">
+            <span itemprop="name">{{ blog.title }}</span>
+          </a>
+          <meta itemprop="position" content="{{ pos }}">
+        </li>
+
+      {%- when 'article' -%}
+        <li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a class="breadcrumbs__link" href="{{ blog.url }}" itemprop="item">
+            <span itemprop="name">{{ blog.title }}</span>
+          </a>
+          <meta itemprop="position" content="{{ pos }}">{% assign pos = pos | plus: 1 %}
+        </li>
+        <li class="breadcrumbs__item is-current" aria-current="page" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a class="breadcrumbs__link" href="{{ article.url }}" itemprop="item">
+            <span itemprop="name">{{ article.title }}</span>
+          </a>
+          <meta itemprop="position" content="{{ pos }}">
+        </li>
+
+      {%- when 'page' -%}
+        <li class="breadcrumbs__item is-current" aria-current="page" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a class="breadcrumbs__link" href="{{ page.url }}" itemprop="item">
+            <span itemprop="name">{{ page.title }}</span>
+          </a>
+          <meta itemprop="position" content="{{ pos }}">
+        </li>
+
+      {%- when 'search' -%}
+        <li class="breadcrumbs__item is-current" aria-current="page" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a class="breadcrumbs__link" href="{{ routes.search_url }}?q={{ search.terms | url_encode }}" itemprop="item">
+            <span itemprop="name">{{ 'general.search.search' | t | default: 'Search' }}</span>
+          </a>
+          <meta itemprop="position" content="{{ pos }}">
+        </li>
+
+      {%- when 'cart' -%}
+        <li class="breadcrumbs__item is-current" aria-current="page" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a class="breadcrumbs__link" href="{{ routes.cart_url }}" itemprop="item">
+            <span itemprop="name">{{ 'sections.cart.title' | t | default: 'Cart' }}</span>
+          </a>
+          <meta itemprop="position" content="{{ pos }}">
+        </li>
+
+      {%- else -%}
+        {%- comment -%}
+          Fallback: customer/account pages, 404, etc.
+        {%- endcomment -%}
+        <li class="breadcrumbs__item is-current" aria-current="page" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a class="breadcrumbs__link" href="{{ canonical_url }}" itemprop="item">
+            <span itemprop="name">{{ template.name | replace: '.', ' ' | capitalize }}</span>
+          </a>
+          <meta itemprop="position" content="{{ pos }}">
+        </li>
+    {%- endcase -%}
+  </ol>
+</nav>
+
+<style>
+/* Core breadcrumb layout fix */
+.breadcrumbs__list {
+  list-style: none;
+  display: flex;
+  flex-wrap: nowrap; /* ❌ prevent wrapping */
+  align-items: center;
+  gap: .25rem;
+  padding: 15px 0px 0px 15px;
+  margin: 0;
+  font-family: var(--font-body-family);
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(var(--color-foreground), 0.7);
+  overflow: hidden; /* ✅ hides overflow instead of breaking */
+  text-overflow: ellipsis;
+}
+
+/* Make each breadcrumb shrinkable */
+.breadcrumbs__item {
+  display: flex;
+  align-items: center;
+  min-width: 0; /* ✅ critical for ellipsis inside flex layouts */
+}
+
+/* Base link styling */
+.breadcrumbs__link {
+  color: rgba(var(--color-foreground), 0.7);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  max-width: 180px; /* adjust as needed */
+  vertical-align: middle;
+}
+
+/* Only the last breadcrumb (product name) can take more width */
+.breadcrumbs__item.is-current .breadcrumbs__link {
+  max-width: 40vw; /* responsive truncation space for product name */
+  font-weight: 600;
+  color: rgba(var(--color-foreground), 1);
+  pointer-events: none;
+}
+
+/* Separator styling */
+.breadcrumbs__item:not(.is-current)::after {
+  content: ">";
+  opacity: .6;
+  margin: 0 .25rem;
+}
+
+/* Mobile-friendly tweaks */
+@media (max-width: 749px) {
+  .breadcrumbs__link { max-width: 100px; }
+  .breadcrumbs__item.is-current .breadcrumbs__link { max-width: 60vw; }
+}
+
+</style>
+
+
+{%- endif -%}

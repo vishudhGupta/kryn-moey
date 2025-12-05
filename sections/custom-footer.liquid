@@ -1,0 +1,318 @@
+{% comment %}
+  Footer – Exact (desktop grid + mobile accordion)
+  - Desktop: Logo+Newsletter | About us | Categories | Customer Care | Follow us (icons)
+  - Mobile: 4 accordions (About/Categories/Care/Follow), then social icons, then newsletter
+  - Menus use OS2.0 link_list objects: section.settings.<id>.links
+  - Uses Dawn's built-in social SVGs
+{% endcomment %}
+
+<section class="bb-footer-wrap color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="bb-footer-card">
+      <!-- Brand + newsletter (desktop left) -->
+      <div class="bb-brand">
+        <a href="{{ routes.root_url }}" class="bb-logo">
+          {% if section.settings.footer_logo != blank %}
+            <img src="{{ section.settings.footer_logo | image_url: width: 380 }}"
+                 alt="{{ section.settings.footer_logo.alt | default: shop.name }}"
+                 class="bb-logo__img" loading="lazy">
+          {% elsif settings.logo %}
+            <img src="{{ settings.logo | image_url: width: 380 }}"
+                 alt="{{ settings.logo.alt | default: shop.name }}"
+                 class="bb-logo__img" loading="lazy">
+          {% else %}
+            <span class="bb-logo__text">{{ shop.name }}</span>
+          {% endif %}
+        </a>
+
+        {% if section.settings.show_newsletter %}
+        <div class="bb-news bb-news--desktop">
+          <p class="bb-news__title">{{ section.settings.nl_title }}</p>
+          {%- form 'customer', id: 'FooterNewsletterDesktop', class: 'bb-form' -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <input class="bb-input" type="email" name="contact[email]" required
+                   placeholder="{{ section.settings.nl_placeholder | escape }}" aria-label="Email">
+            <button class="bb-btn" type="submit">{{ section.settings.nl_button_label }}</button>
+            {% if form.posted_successfully? %}<p class="bb-msg bb-msg--ok">Thanks! You're subscribed.</p>{% endif %}
+          {%- endform -%}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Columns (About, Categories, Care, Follow) -->
+      <div class="bb-cols">
+        <!-- About us -->
+        <details class="bb-acc" open>
+          <summary class="bb-acc__summary">
+            <span>{{ section.settings.about_title }}</span>
+            <span class="bb-acc__icon" aria-hidden="true"></span>
+          </summary>
+          {% if section.settings.about_menu != blank and section.settings.about_menu.links.size > 0 %}
+            <ul class="bb-links">
+              {% for link in section.settings.about_menu.links %}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </details>
+
+        <!-- Categories -->
+        <details class="bb-acc" open>
+          <summary class="bb-acc__summary">
+            <span>{{ section.settings.categories_title }}</span>
+            <span class="bb-acc__icon" aria-hidden="true"></span>
+          </summary>
+          {% if section.settings.categories_menu != blank and section.settings.categories_menu.links.size > 0 %}
+            <ul class="bb-links">
+              {% for link in section.settings.categories_menu.links %}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </details>
+
+        <!-- Customer Care -->
+        <details class="bb-acc" open>
+          <summary class="bb-acc__summary">
+            <span>{{ section.settings.care_title }}</span>
+            <span class="bb-acc__icon" aria-hidden="true"></span>
+          </summary>
+          {% if section.settings.care_menu != blank and section.settings.care_menu.links.size > 0 %}
+            <ul class="bb-links">
+              {% for link in section.settings.care_menu.links %}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </details>
+
+        <!-- Follow us -->
+        <!-- Follow us -->
+<details class="bb-acc bbf-follow" open>
+  <summary class="bb-acc__summary">
+    <span>{{ section.settings.follow_title }}</span>
+    <span class="bb-acc__icon" aria-hidden="true"></span>
+  </summary>
+
+  <!-- keep this ONLY for desktop -->
+  <div class="bb-social bb-social--desktop">
+    {% if settings.social_facebook_link != blank %}
+      <a href="{{ settings.social_facebook_link }}" class="bb-social__icon" aria-label="Facebook" target="_blank" rel="noopener">
+        <span class="svg-wrapper">{{ 'icon-facebook.svg' | inline_asset_content }}</span>
+      </a>
+    {% endif %}
+    {% if settings.social_instagram_link != blank %}
+      <a href="{{ settings.social_instagram_link }}" class="bb-social__icon" aria-label="Instagram" target="_blank" rel="noopener">
+        <span class="svg-wrapper">{{ 'icon-instagram.svg' | inline_asset_content }}</span>
+      </a>
+    {% endif %}
+    {% if settings.social_youtube_link != blank %}
+      <a href="{{ settings.social_youtube_link }}" class="bb-social__icon" aria-label="YouTube" target="_blank" rel="noopener">
+        <span class="svg-wrapper">{{ 'icon-youtube.svg' | inline_asset_content }}</span>
+      </a>
+    {% endif %}
+  </div>
+</details>
+
+      </div>
+
+      <!-- Mobile: social + newsletter below accordions -->
+      <div class="bb-mobile-extras">
+        <div class="bb-social bb-social--mobile">
+          {% if settings.social_facebook_link != blank %}
+            <a href="{{ settings.social_facebook_link }}" aria-label="Facebook" target="_blank" rel="noopener" class="bb-social__icon">
+              <span class="svg-wrapper">{{ 'icon-facebook.svg' | inline_asset_content }}</span>
+            </a>
+          {% endif %}
+          {% if settings.social_instagram_link != blank %}
+            <a href="{{ settings.social_instagram_link }}" aria-label="Instagram" target="_blank" rel="noopener" class="bb-social__icon">
+              <span class="svg-wrapper">{{ 'icon-instagram.svg' | inline_asset_content }}</span>
+            </a>
+          {% endif %}
+          {% if settings.social_youtube_link != blank %}
+            <a href="{{ settings.social_youtube_link }}" aria-label="YouTube" target="_blank" rel="noopener" class="bb-social__icon">
+              <span class="svg-wrapper">{{ 'icon-youtube.svg' | inline_asset_content }}</span>
+            </a>
+          {% endif %}
+        </div>
+
+        {% if section.settings.show_newsletter %}
+        <div class="bb-news bb-news--mobile">
+          <p class="bb-news__title">{{ section.settings.nl_title }}</p>
+          {%- form 'customer', id: 'FooterNewsletterMobile', class: 'bb-form' -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <input class="bb-input" type="email" name="contact[email]" required
+                   placeholder="{{ section.settings.nl_placeholder | escape }}" aria-label="Email">
+            <button class="bb-btn" type="submit">{{ section.settings.nl_button_label }}</button>
+          {%- endform -%}
+        </div>
+        {% endif %}
+      </div>
+
+    </div>
+
+    <div class="bb-copy">
+      © {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ section.settings.copyright_text }}
+    </div>
+  </div>
+
+  <style>
+    /* Show social icons INSIDE the Follow column on desktop,
+   but use the separate mobile block on phones. */
+@media (min-width: 991px){
+  .bbf-follow .bb-social--desktop{ display: flex !important; gap: 12px; }
+  .bb-mobile-extras{ display: none !important; }
+}
+
+@media (max-width: 990px){
+  /* Hide the desktop social icons that are inside the Follow accordion */
+  .bbf-follow .bb-social--desktop{ display: none !important; }
+
+  /* Use ONLY the mobile extras block (socials + newsletter) */
+  .bb-mobile-extras{ display: block !important; }
+
+  /* Ensure the desktop newsletter never shows on mobile */
+  .bb-news--desktop{ display: none !important; }
+}
+
+    /* Card + container */
+    .bb-footer-card { background:#171717; color:#f1f1f1; border-radius:10px; padding:32px 36px; }
+
+    /* Typography + links */
+    .bb-acc__summary { font-size:2rem; font-weight:700; color:#fff; margin:0 0 14px; }
+    .bb-links { list-style:none; padding:0; margin:0; }
+    .bb-links li { margin:8px 0; }
+    .bb-links a { color:#d9d9d9; text-decoration:none; }
+    .bb-links a:hover { color:#fff; text-decoration:underline; }
+
+    /* Newsletter */
+    .bb-news__title { margin:0 0 12px; font-weight:600; color:#e6e6e6; }
+    .bb-form { display:grid; gap:12px; max-width: 280px; }
+    .bb-input { height:42px; padding:0 12px; border:1px solid #3f3f3f; background:#1b1b1b; color:#fff; border-radius:4px; }
+    .bb-input::placeholder { color:#bdbdbd; }
+    .bb-btn { height:40px; border:0; border-radius:4px; background:#e5e5e5; color:#0a0a0a; font-weight:600; cursor:pointer; }
+    .bb-logo__img { max-width: 170px; height:auto; }
+
+    /* Desktop grid (exact 5 columns) */
+    @media (min-width: 991px){
+      .bb-footer-card {
+        display:grid; gap:40px; align-items:start;
+        grid-template-columns: 1.3fr 1fr 1fr 1fr 0.9fr;
+      }
+      .bb-acc { display:block; border:0; padding:0; }
+      .bb-acc__summary { pointer-events:none; }  /* static headings on desktop */
+      .bb-acc__icon { display:none; }
+      .bb-social--desktop { display:flex; gap:12px; }
+      .bb-mobile-extras { display:none; }
+      .bb-news--desktop { display:block; }
+    }
+
+    /* Mobile accordions */
+    @media (max-width: 990px){
+      .bb-footer-card { display:flex; flex-direction:column; gap:16px; padding:22px 18px; }
+      .bb-logo__img { max-width:145px; }
+      .bb-news--desktop { display:none; }
+
+      .bb-acc { border-top:1px solid #262626; padding-top:12px; }
+      .bb-acc:last-of-type { border-bottom:1px solid #262626; padding-bottom:8px; }
+      .bb-acc__summary { display:flex; justify-content:space-between; align-items:center; font-size:1.5rem; cursor:pointer; }
+      .bb-acc__summary::-webkit-details-marker { display:none; }
+      .bb-acc__icon { width:18px; height:18px; position:relative; margin-left:12px; }
+      .bb-acc__icon::before, .bb-acc__icon::after { content:""; position:absolute; background:#eaeaea; border-radius:1px; }
+      .bb-acc__icon::before { width:18px; height:2px; top:8px; left:0; }
+      .bb-acc__icon::after { width:2px; height:18px; top:0; left:8px; transition:transform .2s; }
+      .bb-acc[open] .bb-acc__icon::after { transform: scaleY(0); } /* + to – */
+
+      .bb-mobile-extras { display:block; }
+      .bb-social { display:flex; gap:12px; align-items:center; }
+      .bb-social__icon svg { width:22px; height:22px; color:white; }
+      .bb-news--mobile .bb-form { max-width:100%; }
+    }
+    .bb-social__icon { color: white;}
+    /* Copyright */
+    .bb-copy { text-align:center; color:black; font-size:12px; padding:12px 0 0; }
+
+    /* === Desktop grid fix for footer === */
+@media (min-width: 992px){
+  /* 5 columns: Brand + About + Categories + Care + Follow */
+  .bb-footer-card{
+    display: grid !important;
+    grid-template-columns: 1.3fr 1fr 1fr 1fr 0.9fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  /* Make the inner wrapper pass its children up to the grid */
+  .bb-footer-card > .bb-cols{
+    display: contents !important;
+  }
+
+  /* Turn accordions into static columns on desktop */
+  .bb-acc{
+    display: block !important;
+    border: 0 !important;
+    padding: 0 !important;
+  }
+  .bb-acc__summary{
+    pointer-events: none !important;  /* not clickable on desktop */
+    margin: 0 0 12px !important;
+  }
+  .bb-acc__icon{ display: none !important; }
+
+  /* Show desktop socials, hide mobile extras */
+  .bb-social--desktop{ display: flex !important; gap: 12px; }
+  .bb-mobile-extras{ display: none !important; }
+}
+/* Hide "Follow us" section on mobile completely */
+@media (max-width: 990px) {
+  .bbf-follow {
+    display: none !important;
+  }
+}
+
+  </style>
+
+  <script>
+  (function () {
+    // Keep desktop accordions always open; collapse on mobile
+    const BP = 990;
+    function sync() {
+      const isMobile = window.matchMedia(`(max-width:${BP}px)`).matches;
+      document.querySelectorAll('.bb-acc').forEach(d => {
+        if (isMobile) d.removeAttribute('open'); else d.setAttribute('open','');
+      });
+    }
+    document.addEventListener('DOMContentLoaded', sync);
+    window.addEventListener('resize', sync);
+  })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Footer – Exact",
+  "settings": [
+    { "type": "image_picker", "id": "footer_logo", "label": "Footer logo" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+
+    { "type": "text", "id": "about_title", "label": "About heading", "default": "About us" },
+    { "type": "link_list", "id": "about_menu", "label": "About menu" },
+
+    { "type": "text", "id": "categories_title", "label": "Categories heading", "default": "Categories" },
+    { "type": "link_list", "id": "categories_menu", "label": "Categories menu" },
+
+    { "type": "text", "id": "care_title", "label": "Customer Care heading", "default": "Customer Care" },
+    { "type": "link_list", "id": "care_menu", "label": "Customer Care menu" },
+
+    { "type": "text", "id": "follow_title", "label": "Follow us heading", "default": "Follow us" },
+
+    { "type": "checkbox", "id": "show_newsletter", "label": "Show newsletter", "default": true },
+    { "type": "text", "id": "nl_title", "label": "Newsletter title", "default": "Get the News Letter" },
+    { "type": "text", "id": "nl_placeholder", "label": "Newsletter placeholder", "default": "Your Email" },
+    { "type": "text", "id": "nl_button_label", "label": "Newsletter button", "default": "Sign up" },
+
+    { "type": "text", "id": "copyright_text", "label": "Copyright text", "default": "Proudly made in India with Love" }
+  ],
+  "presets": [{ "name": "Footer – Exact" }]
+}
+{% endschema %}

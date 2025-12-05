@@ -1,0 +1,56 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "image_with_text_TC4aRQ": {
+      "type": "image-with-text",
+      "blocks": {
+        "text_NNGka3": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Fifty makes you live unapologetically, with no compulsion to prove yourself. It is what it is! Looking in the mirror, you love the bumps and the wrinkles that stare back at you, ‘cause you’ve earned it all!</p><p>So, wear what makes you invincible, at any age! Be yourself, radiate charm and shine a light, for we invite you to unwrap the presents life has bestowed upon you!</p><p>At Beachbum, we want you to embrace your imperfections, as therein lies your distinctiveness, the mantra to your own unique perfections. Dress yourself in curiosity paired with gentleness, love and of course, some glitter!</p><p>Steering away from the din of everyday life, stray blissfully to the beach— our eternal inspiration— and let warmth and optimism flood the shores of your consciousness! Exuberant and endlessly wondrous, the beach is worth being at and embodying! Let your tranquil femininity know no bounds!</p><p>Soaking in at the beach or by the poolside is about relaxed dressing that stuns every eye, makes you feel inspired, while being in line with styles that are easy to don and easier to adorn!</p><p>Our work is an ode to the timeless intrigue of freedom and to the magic of just living! At Beachbum, we celebrate the values of durability, longevity and quality, staying away from the throwaway culture, keeping the fits comfortable and free flowing and catering to all body types.</p><p>Electrify the onlookers, soothe your soul, know limitless grace. This season of loving yourself, be a Beachbum.</p><p></p>",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "text_NNGka3"
+      ],
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "image": "shopify://shop_images/BRAND-STORY.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "image_behavior": "none",
+        "content_layout": "no-overlap",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "",
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "image_with_text_TC4aRQ"
+  ]
+}

@@ -1,0 +1,88 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "rich_text_4Bhq9k": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_U9MPrk": {
+          "type": "heading",
+          "settings": {
+            "heading": "ABOUT BEACHBUM",
+            "heading_size": "h2"
+          }
+        },
+        "text_zqCzPR": {
+          "type": "text",
+          "settings": {
+            "text": "<p>This Beachbum website is owned and operated by <strong>SND INC.</strong></p><p>Beachbum is a Resort wear label that is fun, effortless and comfortable. Believing in the concepts of simplicity, color and the free spirit, we pick elements from the everyday ordinary and turn them into something special.</p><p>In every collection, we aim to bring together multitude of designs that inspire experiences.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_U9MPrk",
+        "text_zqCzPR"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "rich_text_7TCwGx": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_qLkbcR": {
+          "type": "heading",
+          "settings": {
+            "heading": "ABOUT SND INC",
+            "heading_size": "h2"
+          }
+        },
+        "text_8hrMBd": {
+          "type": "text",
+          "settings": {
+            "text": "<p>SND INC traces its roots of garment exports since 2005. We are currently operating 2 units situated proximal to one another. Both our units are approved by SEDEX and INDITEX for compliance. We have hi-tech manufacturing units with latest manufacturing setups. With the coordination of highly capable staffs and satisfied workers, we can easily achieve our manufacturing goals within the time period.</p><p>We have in-house facilities from start to end garment manufacturing process in separate units for each section including designing room,merchandising, sampling, stitching, washing, finishing, packing, dispatching.</p><p>With the production in India we are able to keep up with competitive pricing and developments in the textile sector. Our company policy includes reliable and effective service, in time production and delivery as well as high flexibility. As a part of our total Quality Management philosophy, we are continuously searching for options in lowering our cost to give the best price with the best quality to our valuable customers.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_qLkbcR",
+        "text_8hrMBd"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    }
+  },
+  "order": [
+    "main",
+    "rich_text_4Bhq9k",
+    "rich_text_7TCwGx"
+  ]
+}

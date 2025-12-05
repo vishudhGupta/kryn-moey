@@ -1,0 +1,330 @@
+{% comment %}
+  Custom Product Card — with collection-page mobile tweaks for Dawn
+{% endcomment %}
+
+{% liquid
+  assign p = card_product | default: product
+  if p == null
+    echo '<!-- custom-product-card: no product -->'
+  endif
+
+  assign uid = section_id | default: section.id | default: 's'
+  assign card_id = 'cpc-' | append: p.id | append: '-' | append: uid
+
+  if lazy_load == false
+    assign loading_value = 'eager'
+  else
+    assign loading_value = 'lazy'
+  endif
+
+  assign price_now = p.price | default: p.price_min
+  assign price_was = p.compare_at_price_max
+  assign has_sale = false
+  if price_was and price_was > price_now
+    assign has_sale = true
+    assign discount_pct = price_was | minus: price_now | times: 100 | divided_by: price_was | round
+  endif
+%}
+
+{% if request.page_type == 'collection' %}
+  {% assign on_collection = true %}
+{% else %}
+  {% assign on_collection = false %}
+{% endif %}
+
+<div class="cpc-card {% if on_collection %}cpc--collection{% endif %}" id="{{ card_id }}">
+  <div class="cpc-imgwrap">
+    {% if has_sale %}
+      <span class="cpc-badge">{{ discount_pct }}% off</span>
+    {% endif %}
+    <a href="{{ p.url }}" class="cpc-imglink">
+      <img
+        class="cpc-img"
+        id="{{ card_id }}-img"
+        src="{{ p.featured_image | image_url: width: 800 }}"
+        alt="{{ p.title | escape }}"
+        loading="{{ loading_value }}"
+      >
+    </a>
+    <button class="cpc-wish" type="button" aria-label="Wishlist">♡</button>
+  </div>
+
+  <div class="cpc-body">
+    <h3 class="cpc-title">{{ p.title }}</h3>
+
+    <form method="post" action="/cart/add" class="cpc-form" id="{{ card_id }}-form">
+      <!-- Price -->
+      <div class="cpc-price">
+        {% if has_sale %}
+          <span class="cpc-price-now">
+            {{ price_now | money_without_trailing_zeros | replace: 'Rs.', '₹' | replace: 'Rs', '₹' }}
+          </span>
+          <span class="cpc-price-was">
+            {{ price_was | money_without_trailing_zeros | replace: 'Rs.', '₹' | replace: 'Rs', '₹' }}
+          </span>
+        {% else %}
+          <span class="cpc-price-now">
+            {{ price_now | money_without_trailing_zeros | replace: 'Rs.', '₹' | replace: 'Rs', '₹' }}
+          </span>
+        {% endif %}
+      </div>
+
+      <!-- Variants -->
+      {% unless p.has_only_default_variant %}
+        <div class="cpc-variants cpc-variants--inline">
+          {% for option in p.options_with_values %}
+            {% assign opt_handle = option.name | handleize %}
+            <select
+              id="{{ card_id }}-opt-{{ opt_handle }}"
+              class="cpc-select cpc-select--pill"
+              name="options[{{ option.name }}]"
+              data-option-index="{{ forloop.index0 }}"
+            >
+              {% for value in option.values %}
+                <option value="{{ value | escape }}">{{ value }}</option>
+              {% endfor %}
+            </select>
+          {% endfor %}
+        </div>
+      {% endunless %}
+
+      <input type="hidden" name="id" value="{{ p.variants.first.id }}">
+
+      <!-- Buttons -->
+      <div class="cpc-actions">
+        <button type="submit" name="add" class="cpc-btn cpc-btn--outline">Add to Cart</button>
+        <a class="cpc-btn cpc-btn--solid" id="{{ card_id }}-buynow" href="/cart/{{ p.variants.first.id }}:1">Buy Now</a>
+      </div>
+    </form>
+  </div>
+
+  <script type="application/json" id="{{ card_id }}-data">
+    {{ p | json }}
+  </script>
+</div>
+
+<script>
+  (() => {
+    const card = document.getElementById('{{ card_id }}');
+    if (!card) return;
+    const form = card.querySelector('.cpc-form');
+    const imgEl = card.querySelector('.cpc-img');
+    const buyNow = card.querySelector('#{{ card_id }}-buynow');
+    const dataTag = card.querySelector('#{{ card_id }}-data');
+    if (!dataTag) return;
+
+    const product = JSON.parse(dataTag.textContent);
+    const selects = card.querySelectorAll('.cpc-select');
+
+    function syncVariant() {
+      if (!selects.length) return;
+      const opts = Array.from(selects).map((s) => s.value);
+      const variant = product.variants.find((v) => JSON.stringify(v.options) === JSON.stringify(opts));
+      if (!variant) return;
+      form.querySelector('input[name="id"]').value = variant.id;
+      buyNow.setAttribute('href', `/cart/${variant.id}:1`);
+      if (variant.featured_image && imgEl) imgEl.src = variant.featured_image.src;
+    }
+    selects.forEach((s) => s.addEventListener('change', syncVariant));
+  })();
+</script>
+
+<style>
+  /* --- Card Layout --- */
+  .cpc-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e6e6e6;
+    border-radius: 14px;
+    background: #fff;
+    overflow: hidden;
+    height: 100%;
+  }
+  .cpc-imgwrap {
+    position: relative;
+  }
+  .cpc-img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    display: block;
+  }
+  .cpc-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #111;
+    color: #fff;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  .cpc-wish {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #fff;
+    border: 0;
+    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  /* --- Content --- */
+  .cpc-body {
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+  }
+  .cpc-title {
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.3;
+    margin: 6px 0 4px;
+    min-height: 2.8em;
+    overflow: hidden;
+  }
+
+  /* --- Price + Variants --- */
+  .cpc-price {
+    white-space: nowrap;
+    margin-bottom: 6px;
+  }
+  .cpc-price-now {
+    font-weight: 600;
+    font-size: 14px;
+    color: #111;
+  }
+  .cpc-price-was {
+    font-size: 13px;
+    margin-left: 6px;
+    opacity: 0.6;
+    text-decoration: line-through;
+  }
+  .cpc-variants--inline {
+    display: flex;
+    gap: 6px;
+  }
+  .cpc-select {
+    padding: 4px 24px 4px 10px;
+    font-size: 13px;
+    border: 1px solid #ccc;
+    border-radius: 999px;
+    background: #fff;
+    min-width: 70px;
+    max-width: 90px;
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, #111 50%),
+      linear-gradient(135deg, #111 50%, transparent 50%);
+    background-position: calc(100% - 15px) center, calc(100% - 10px) center;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+  }
+
+  /* --- Buttons --- */
+  .cpc-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .cpc-btn {
+    flex: 1;
+    font-size: 13px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: 0.2s ease;
+  }
+  .cpc-btn--outline {
+    background: #fff;
+    border-color: #111;
+    color: #111;
+  }
+  .cpc-btn--solid {
+    background: #111;
+    color: #fff;
+  }
+  .cpc-btn--outline:hover {
+    background: #111;
+    color: #fff;
+  }
+  .cpc-btn--solid:hover {
+    opacity: 0.9;
+  }
+
+  /* --- Mobile tweaks ONLY for collection page --- */
+  @media screen and (max-width: 749px) {
+    .template-collection .cpc--collection .cpc-price {
+      order: -1;
+      width: 100%;
+    }
+    .template-collection .cpc--collection .cpc-variants {
+      width: 100%;
+      margin-top: 4px;
+    }
+    .template-collection .cpc--collection .cpc-actions {
+      flex-direction: row !important;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+    }
+    .template-collection .cpc--collection .cpc-actions .cpc-btn {
+      flex: 1 1 50%;
+      text-align: center;
+      width: 100%;
+    }
+  }
+  /* === MOBILE COLLECTION PAGE: STACK BUTTONS VERTICALLY === */
+  @media screen and (max-width: 749px) {
+    /* Stack the buttons vertically */
+    .cpc--collection .cpc-actions {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 8px !important;
+      width: 100% !important;
+      margin-top: 10px !important;
+    }
+
+    .cpc--collection .cpc-actions .cpc-btn {
+      width: 100% !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      border-radius: 8px !important;
+      text-align: center !important;
+      padding: 10px 0 !important;
+      box-sizing: border-box;
+    }
+
+    /* Style consistency */
+    .cpc--collection .cpc-btn--outline {
+      background: #fff !important;
+      border: 1px solid #111 !important;
+      color: #111 !important;
+    }
+
+    .cpc--collection .cpc-btn--solid {
+      background: #111 !important;
+      color: #fff !important;
+    }
+
+    .cpc--collection .cpc-btn--outline:hover {
+      background: #111 !important;
+      color: #fff !important;
+    }
+
+    .cpc--collection .cpc-btn--solid:hover {
+      opacity: 0.9;
+    }
+  }
+</style>

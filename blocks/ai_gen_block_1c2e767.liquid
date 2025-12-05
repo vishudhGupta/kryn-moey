@@ -1,0 +1,801 @@
+{% doc %}
+  @prompt
+    shop the look section where 1 image will be there in he middle nd we will highlight products on that imge with dots in different locations and on click of the dots desired products will be shown .
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-shop-look-container-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .ai-shop-look-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    overflow: hidden;
+  }
+
+  .ai-shop-look-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-shop-look-placeholder-{{ ai_gen_id }} {
+    background-color: #f4f4f4;
+    width: 100%;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-shop-look-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+  }
+
+  .ai-shop-look-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 300px;
+    max-height: 300px;
+  }
+
+  .ai-shop-look-hotspot-{{ ai_gen_id }} {
+    position: absolute;
+    top: var(--ai-hotspot-y-{{ ai_gen_id }});
+    left: var(--ai-hotspot-x-{{ ai_gen_id }});
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+
+  .ai-shop-look-dot-{{ ai_gen_id }} {
+    width: {{ block.settings.dot_size }}px;
+    height: {{ block.settings.dot_size }}px;
+    border-radius: 50%;
+    background-color: {{ block.settings.dot_color }};
+    border: {{ block.settings.dot_border_width }}px solid {{ block.settings.dot_border_color }};
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+  }
+
+  .ai-shop-look-dot-{{ ai_gen_id }}:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .ai-shop-look-dot-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    width: calc({{ block.settings.dot_size }}px * 0.4);
+    height: calc({{ block.settings.dot_size }}px * 0.4);
+    background-color: {{ block.settings.dot_inner_color }};
+    border-radius: 50%;
+  }
+
+  .ai-shop-look-dot-{{ ai_gen_id }}::after {
+    content: '';
+    position: absolute;
+    width: calc({{ block.settings.dot_size }}px * 1.5);
+    height: calc({{ block.settings.dot_size }}px * 1.5);
+    border: 2px solid {{ block.settings.dot_color }};
+    border-radius: 50%;
+    opacity: 0;
+    animation: ai-shop-look-pulse-{{ ai_gen_id }} 2s infinite;
+  }
+
+  @keyframes ai-shop-look-pulse-{{ ai_gen_id }} {
+    0% {
+      transform: scale(0.8);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.2);
+      opacity: 0;
+    }
+  }
+
+  .ai-shop-look-product-popup-{{ ai_gen_id }} {
+    position: absolute;
+    width: {{ block.settings.popup_width }}px;
+    background-color: {{ block.settings.popup_bg_color }};
+    border-radius: {{ block.settings.popup_border_radius }}px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    padding: 16px;
+    color: {{ block.settings.popup_text_color }};
+    z-index: 3;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-shop-look-product-popup-{{ ai_gen_id }}.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .ai-shop-look-product-popup-{{ ai_gen_id }}--top {
+    bottom: calc(100% + 15px);
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+  }
+
+  .ai-shop-look-product-popup-{{ ai_gen_id }}--top.active {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .ai-shop-look-product-popup-{{ ai_gen_id }}--bottom {
+    top: calc(100% + 15px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+  }
+
+  .ai-shop-look-product-popup-{{ ai_gen_id }}--bottom.active {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .ai-shop-look-product-popup-{{ ai_gen_id }}--left {
+    right: calc(100% + 15px);
+    top: 50%;
+    transform: translateY(-50%) translateX(10px);
+  }
+
+  .ai-shop-look-product-popup-{{ ai_gen_id }}--left.active {
+    transform: translateY(-50%) translateX(0);
+  }
+
+  .ai-shop-look-product-popup-{{ ai_gen_id }}--right {
+    left: calc(100% + 15px);
+    top: 50%;
+    transform: translateY(-50%) translateX(-10px);
+  }
+
+  .ai-shop-look-product-popup-{{ ai_gen_id }}--right.active {
+    transform: translateY(-50%) translateX(0);
+  }
+
+  .ai-shop-look-product-content-{{ ai_gen_id }} {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .ai-shop-look-product-image-{{ ai_gen_id }} {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .ai-shop-look-product-image-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-shop-look-product-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+  }
+
+  .ai-shop-look-product-info-{{ ai_gen_id }} {
+    flex-grow: 1;
+    min-width: 0;
+  }
+
+  .ai-shop-look-product-title-{{ ai_gen_id }} {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    line-height: 1.3;
+    color: {{ block.settings.popup_text_color }};
+  }
+
+  .ai-shop-look-product-price-{{ ai_gen_id }} {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: {{ block.settings.popup_text_color }};
+  }
+
+  .ai-shop-look-product-link-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: {{ block.settings.popup_button_color }};
+    color: {{ block.settings.popup_button_text_color }};
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-shop-look-product-link-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.popup_button_hover_color }};
+  }
+
+  .ai-shop-look-close-btn-{{ ai_gen_id }} {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: {{ block.settings.popup_text_color }};
+    opacity: 0.7;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-shop-look-close-btn-{{ ai_gen_id }}:hover {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-shop-look-empty-product-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 20px;
+    color: #999;
+    font-style: italic;
+    font-size: 14px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-shop-look-product-popup-{{ ai_gen_id }} {
+      width: {{ block.settings.popup_width | times: 0.8 }}px;
+      max-width: calc(100vw - 40px);
+    }
+
+    .ai-shop-look-dot-{{ ai_gen_id }} {
+      width: {{ block.settings.dot_size | times: 0.8 }}px;
+      height: {{ block.settings.dot_size | times: 0.8 }}px;
+    }
+
+    .ai-shop-look-product-image-{{ ai_gen_id }} {
+      width: 60px;
+      height: 60px;
+    }
+  }
+{% endstyle %}
+
+<shop-the-look-{{ ai_gen_id }}
+  class="ai-shop-look-container-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-shop-look-image-wrapper-{{ ai_gen_id }}">
+    {% if block.settings.image %}
+      <img
+        src="{{ block.settings.image | image_url: width: 1200 }}"
+        alt="{{ block.settings.image.alt | escape }}"
+        loading="lazy"
+        width="{{ block.settings.image.width }}"
+        height="{{ block.settings.image.height }}"
+        class="ai-shop-look-image-{{ ai_gen_id }}"
+      >
+    {% else %}
+      <div class="ai-shop-look-placeholder-{{ ai_gen_id }}">
+        {{ 'hero-apparel-1' | placeholder_svg_tag }}
+        <div class="ai-shop-look-empty-state-{{ ai_gen_id }}">
+          Add an image to showcase your look
+        </div>
+      </div>
+    {% endif %}
+
+    {% for i in (1..5) %}
+      {% liquid
+        assign hotspot_enabled_key = 'hotspot_' | append: i | append: '_enabled'
+        assign hotspot_x_key = 'hotspot_' | append: i | append: '_x'
+        assign hotspot_y_key = 'hotspot_' | append: i | append: '_y'
+        assign product_key = 'hotspot_' | append: i | append: '_product'
+
+        assign hotspot_enabled = block.settings[hotspot_enabled_key]
+        assign hotspot_x = block.settings[hotspot_x_key]
+        assign hotspot_y = block.settings[hotspot_y_key]
+        assign product = block.settings[product_key]
+      %}
+
+      {% if hotspot_enabled %}
+        <div
+          class="ai-shop-look-hotspot-{{ ai_gen_id }} ai-shop-look-hotspot-{{ ai_gen_id }}-{{ i }}"
+          style="
+            --ai-hotspot-x-{{ ai_gen_id }}: {{ hotspot_x }}%;
+            --ai-hotspot-y-{{ ai_gen_id }}: {{ hotspot_y }}%;
+          "
+          data-hotspot-id="{{ i }}"
+        >
+          <button
+            class="ai-shop-look-dot-{{ ai_gen_id }}"
+            aria-label="View product details"
+            aria-expanded="false"
+          ></button>
+
+          <div
+            class="ai-shop-look-product-popup-{{ ai_gen_id }} ai-shop-look-product-popup-{{ ai_gen_id }}--{{ block.settings.popup_position }} ai-shop-look-product-popup-{{ ai_gen_id }}-{{ i }}"
+          >
+            <button
+              class="ai-shop-look-close-btn-{{ ai_gen_id }}"
+              aria-label="Close"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+
+            {% if product != blank %}
+              <div class="ai-shop-look-product-content-{{ ai_gen_id }}">
+                <div class="ai-shop-look-product-image-{{ ai_gen_id }}">
+                  {% if product.featured_image %}
+                    <img
+                      src="{{ product.featured_image | image_url: width: 160 }}"
+                      alt="{{ product.featured_image.alt | escape }}"
+                      width="160"
+                      height="160"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    <div class="ai-shop-look-product-placeholder-{{ ai_gen_id }}">
+                      {{ 'product-1' | placeholder_svg_tag }}
+                    </div>
+                  {% endif %}
+                </div>
+                <div class="ai-shop-look-product-info-{{ ai_gen_id }}">
+                  <h3 class="ai-shop-look-product-title-{{ ai_gen_id }}">{{ product.title }}</h3>
+                  <div class="ai-shop-look-product-price-{{ ai_gen_id }}">{{ product.price | money }}</div>
+                  <a
+                    href="{{ product.url }}"
+                    class="ai-shop-look-product-link-{{ ai_gen_id }}"
+                  >
+                    {{ block.settings.button_text }}
+                  </a>
+                </div>
+              </div>
+            {% else %}
+              <div class="ai-shop-look-empty-product-{{ ai_gen_id }}">
+                Select a product for this hotspot
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</shop-the-look-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ShopTheLook{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.hotspots = this.querySelectorAll('.ai-shop-look-hotspot-{{ ai_gen_id }}');
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.hotspots.forEach((hotspot) => {
+          const button = hotspot.querySelector('.ai-shop-look-dot-{{ ai_gen_id }}');
+          const popup = hotspot.querySelector('.ai-shop-look-product-popup-{{ ai_gen_id }}');
+          const closeButton = popup.querySelector('.ai-shop-look-close-btn-{{ ai_gen_id }}');
+
+          button.addEventListener('click', () => {
+            this.querySelectorAll('.ai-shop-look-product-popup-{{ ai_gen_id }}').forEach((p) => {
+              if (p !== popup) {
+                p.classList.remove('active');
+                p.previousElementSibling.setAttribute('aria-expanded', 'false');
+              }
+            });
+
+            const isActive = popup.classList.contains('active');
+            popup.classList.toggle('active');
+            button.setAttribute('aria-expanded', !isActive);
+          });
+
+          closeButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            popup.classList.remove('active');
+            button.setAttribute('aria-expanded', 'false');
+          });
+        });
+
+        document.addEventListener('click', (event) => {
+          if (
+            !event.target.closest('.ai-shop-look-product-popup-{{ ai_gen_id }}') &&
+            !event.target.closest('.ai-shop-look-dot-{{ ai_gen_id }}')
+          ) {
+            this.querySelectorAll('.ai-shop-look-product-popup-{{ ai_gen_id }}').forEach((popup) => {
+              popup.classList.remove('active');
+              popup.previousElementSibling.setAttribute('aria-expanded', 'false');
+            });
+          }
+        });
+      }
+    }
+
+    customElements.define('shop-the-look-{{ ai_gen_id }}', ShopTheLook{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Shop the look",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Look image"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Hotspot dots"
+    },
+    {
+      "type": "range",
+      "id": "dot_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Dot size",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "dot_border_color",
+      "label": "Dot border color",
+      "default": "#121212"
+    },
+    {
+      "type": "range",
+      "id": "dot_border_width",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "unit": "px",
+      "label": "Dot border width",
+      "default": 2
+    },
+    {
+      "type": "color",
+      "id": "dot_inner_color",
+      "label": "Dot inner color",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Product popup"
+    },
+    {
+      "type": "select",
+      "id": "popup_position",
+      "label": "Popup position",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "range",
+      "id": "popup_width",
+      "min": 200,
+      "max": 350,
+      "step": 10,
+      "unit": "px",
+      "label": "Popup width",
+      "default": 280
+    },
+    {
+      "type": "range",
+      "id": "popup_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Popup border radius",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "popup_bg_color",
+      "label": "Popup background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "popup_text_color",
+      "label": "Popup text color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "popup_button_color",
+      "label": "Button color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "popup_button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "popup_button_hover_color",
+      "label": "Button hover color",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "View product"
+    },
+    {
+      "type": "header",
+      "content": "Hotspot 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "hotspot_1_enabled",
+      "label": "Enable hotspot 1",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "hotspot_1_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Horizontal position",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "hotspot_1_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Vertical position",
+      "default": 40
+    },
+    {
+      "type": "product",
+      "id": "hotspot_1_product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Hotspot 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "hotspot_2_enabled",
+      "label": "Enable hotspot 2",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "hotspot_2_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Horizontal position",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "hotspot_2_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Vertical position",
+      "default": 25
+    },
+    {
+      "type": "product",
+      "id": "hotspot_2_product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Hotspot 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "hotspot_3_enabled",
+      "label": "Enable hotspot 3",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "hotspot_3_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Horizontal position",
+      "default": 75
+    },
+    {
+      "type": "range",
+      "id": "hotspot_3_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Vertical position",
+      "default": 60
+    },
+    {
+      "type": "product",
+      "id": "hotspot_3_product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Hotspot 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "hotspot_4_enabled",
+      "label": "Enable hotspot 4",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "hotspot_4_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Horizontal position",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "hotspot_4_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Vertical position",
+      "default": 70
+    },
+    {
+      "type": "product",
+      "id": "hotspot_4_product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Hotspot 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "hotspot_5_enabled",
+      "label": "Enable hotspot 5",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "hotspot_5_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Horizontal position",
+      "default": 85
+    },
+    {
+      "type": "range",
+      "id": "hotspot_5_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Vertical position",
+      "default": 80
+    },
+    {
+      "type": "product",
+      "id": "hotspot_5_product",
+      "label": "Product"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop the look"
+    }
+  ]
+}
+{% endschema %}

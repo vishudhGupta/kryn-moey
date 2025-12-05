@@ -1,0 +1,161 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "rich_text_RcGjrE": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_bnMdCe": {
+          "type": "heading",
+          "settings": {
+            "heading": "Celebrity Favorites - Everything From Dresses to Bikini Sets",
+            "heading_size": "h2"
+          }
+        },
+        "text_dRR7QH": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Here comes the collection that even celebrities couldn’t resist. Explore the most trendy, stylish, and loved beachwear/resortwear outfits and recreate the look of your fashion idols from around the world. Check out women's dresses, co-ord sets, jumpsuits, tops, bikini sets, and more from our celeb-favorite collection</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_bnMdCe",
+        "text_dRR7QH"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "collection_list_9xYAtH": {
+      "type": "collection-list",
+      "blocks": {
+        "featured_collection_a4EMK7": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "ankana-ghosh"
+          }
+        },
+        "featured_collection_CNFAbN": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "ankita-lokhande"
+          }
+        },
+        "featured_collection_xXGF3D": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "ankita-sahigal"
+          }
+        },
+        "featured_collection_BKdeLk": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "anupriya-kapur"
+          }
+        },
+        "featured_collection_pYcMWw": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "ayna"
+          }
+        },
+        "featured_collection_ehf6gy": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "emily"
+          }
+        },
+        "featured_collection_X3Xbwg": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "onella-1"
+          }
+        },
+        "featured_collection_MCpbyT": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "orvana-ghai"
+          }
+        },
+        "featured_collection_Je9wEf": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "shivangi-vasudeva"
+          }
+        },
+        "featured_collection_9VkWmG": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "sonali-arora"
+          }
+        },
+        "featured_collection_NQx9MW": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "urnisha"
+          }
+        },
+        "featured_collection_6Y7eiD": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "mouni-roy"
+          }
+        }
+      },
+      "block_order": [
+        "featured_collection_a4EMK7",
+        "featured_collection_CNFAbN",
+        "featured_collection_xXGF3D",
+        "featured_collection_BKdeLk",
+        "featured_collection_pYcMWw",
+        "featured_collection_ehf6gy",
+        "featured_collection_X3Xbwg",
+        "featured_collection_MCpbyT",
+        "featured_collection_Je9wEf",
+        "featured_collection_9VkWmG",
+        "featured_collection_NQx9MW",
+        "featured_collection_6Y7eiD"
+      ],
+      "name": "t:sections.collection-list.presets.name",
+      "settings": {
+        "title": "",
+        "heading_size": "h1",
+        "image_ratio": "square",
+        "columns_desktop": 3,
+        "color_scheme": "",
+        "show_view_all": false,
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "rich_text_RcGjrE",
+    "collection_list_9xYAtH"
+  ]
+}

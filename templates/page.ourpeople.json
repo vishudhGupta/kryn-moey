@@ -1,0 +1,187 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "image_with_text_nNzHKw": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_nhhJAg": {
+          "type": "heading",
+          "settings": {
+            "heading": "Ratna Yadav",
+            "heading_size": "h1"
+          }
+        },
+        "text_MLfgEn": {
+          "type": "text",
+          "settings": {
+            "text": "<p>She has been the backbone of our work and luckily for us, she continues to be!</p><p>Our two-year journey would not even have begun if she hadn't stepped in and understood every inspiration, mood or thought that crossed my mind. We work in tandem and in sync which is a blessing!</p><p>From dealing with the tailors and artisans, the explaining, the details , designs and transferring our products to the Beachbum dream platform is all her ballgame! Constantly learning ,reinventing , motivating with the everyday struggles and ups and downs she is a force to reckon with!</p><p>Personally, she is family at work  and creates an atmosphere of smooth and seemless creativity in and around me. Her life is all about her son; her dp depicts her devotion. She says, “I gave birth to my best friend.”</p><p>Life hasn't been a bed of roses but with her dedication and focus, we wish her just that.</p><p>We thank her, we bless her and wish her only the best, ‘cause what she brings to Beachbum everyday is irreplaceable</p><p></p>",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "heading_nhhJAg",
+        "text_MLfgEn"
+      ],
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "image": "shopify://shop_images/Ratna-Yadav.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "text_first",
+        "image_behavior": "none",
+        "content_layout": "no-overlap",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "",
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "image_with_text_aBw3qf": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_aWmgqr": {
+          "type": "heading",
+          "settings": {
+            "heading": "Anubha Rana",
+            "heading_size": "h1"
+          }
+        },
+        "text_mxERJG": {
+          "type": "text",
+          "settings": {
+            "text": "<p>She’s wide-eyed, pleasant, ever-smiling and<br/>sweet! She’s our dear Anubha!</p><p> </p><p>Keen, calm, dedicated, polite, intelligent and<br/>ever ready to learn, Anubha is a complete asset in the workspace. A one-woman<br/>army, the graph of her growth spirals upwards with every passing day! Beachbum<br/>is lucky to have her, since nothing is a no for her and everything is possible,<br/>for Anubha relentlessly wants to learn and grow. After all, work ethic matters<br/>since unlike charisma or intelligence, it is a choice and in our case, it is a<br/>choice Anubha makes every day! </p><p> </p><p>From talking to the clients to connecting all<br/>the orders together and from coordinating among departments to taking care of<br/>line sheets and look books, Anubha is our go-to person! Ask Anubha anything and<br/>she will know, for she is our human computer— competent, strategic and<br/>untiring!</p><p> </p><p>Your work matters, your ideas matter, your<br/>consistency matters and your presence matter. So, keep it up, Anubha! </p>",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "heading_aWmgqr",
+        "text_mxERJG"
+      ],
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "image": "shopify://shop_images/WhatsApp_Image_2024-01-27_at_15.53.56_3f920129.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "image_behavior": "none",
+        "content_layout": "no-overlap",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "",
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "image_with_text_id9xhE": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_RTAncN": {
+          "type": "heading",
+          "settings": {
+            "heading": "Vicky",
+            "heading_size": "h1"
+          }
+        },
+        "text_JcqmgH": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Yogesh Shahi's journey is a shining testament to the power of determination, hard work, and humility. Born and raised in Bhimtal, a small town in Uttarakhand, Yogesh's path to success was paved with challenges and opportunities.<br/><br/>Growing up in a modest household, Yogesh faced numerous obstacles, but his unwavering passion for growth and self-improvement drove him to pursue a better life. With limited resources, he relocated to the city, where he encountered a new world of possibilities and setbacks.<br/></p><p>Undeterred by the language barrier, Yogesh dedicated himself to learning English, recognizing its importance in the modern workforce. His thirst for knowledge extended to computers and CAD (Computer-Aided Design), equipping him with cutting-edge skills.<br/><br/>At Beachbum, Yogesh's versatility and work ethic have earned him immense respect. He seamlessly navigates various roles:<br/><br/>•⁠  ⁠Providing exceptional support during exhibitions and shoots<br/>•⁠  ⁠Managing office tasks with precision and efficiency<br/>•⁠  ⁠Demonstrating expertise in CAD design<br/><br/>Despite his remarkable achievements, Yogesh remains grounded and humble. His ability to stay true to his roots while adapting to new environments has inspired colleagues and mentors alike.<br/>Beachbum family is proud of you Vicky .. keep it up !!!</p>",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "heading_RTAncN",
+        "text_JcqmgH"
+      ],
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "image": "shopify://shop_images/WhatsApp_Image_2024-10-04_at_17.23.07_e360a894.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "text_first",
+        "image_behavior": "none",
+        "content_layout": "no-overlap",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "",
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "image_with_text_V3RwQ7": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_3AcrWm": {
+          "type": "heading",
+          "settings": {
+            "heading": "ISHWAR ACHARYA",
+            "heading_size": "h1"
+          }
+        },
+        "text_Q8xjXa": {
+          "type": "text",
+          "settings": {
+            "text": "<p>I was born is lower middle class family in a small village called Jangaltol, Nepal in Jan 1992. We were in a joint family so my grandmother, my parents and my uncle’s family used to live in a same house.</p><p>We were total 5 children in the family ,me my sister, uncle’s 2 sons and buas 1 daughter. We all studied in a same school.</p><p>Our family was/is a typical farming family . We used to work on fields but could not produce enough from farming for our studies and family’s daily expenses.</p><p>My father passed away very young , i was just 5 years old. Our family faced lots of ups and downs, financial difficulties. I was very small to figure out what was going on.</p><p>Our parents didn’t have enough food to eat. I had seen that situation up close.</p><p>After my dad’s tragedy, our family situation had gotten worse. Mom used to be very sad. Now i can imagine, how much hell that situation was and how much pain she was bearing.</p><p>At that time, one of our relative aunt used to live and work on Delhi. My grandmother suggested my mom to go with her(that aunt) to Delhi. My grandmother thought if she went far from home she will overcome that situation and would heal sooner.</p><p>At that time there was no phone. We used to communicate with our mom through letters. She used to visit us once a year for 15 days only in a grand festival called Dashain also known as Dussehra. I always want to spend time with mom but i couldn’t.</p><p>Mom helped us for our school fees and our pocket money. Our family situation was more stable in last few years of our schooling days.</p><p>My mom always used to talk about Delhi and Vikas, Aparna, Sumair, Daksh, the Gupta family, where she used to work. I always wanted to visit the grand city Delhi. She always mentioned how good Gupta family was ,I already respect them from bottom of my heart.</p><p>Me ,my cousins and sister were good at school. After finishing my 10th i visited Delhi for the first time and was there with mom for about 20 days. I visited Delhi and had a good experience.</p><p>After schooling, I was moved to a city called Biratnagar to study college education. There is where for the first time i saw computer and very excited to learn. My mom helped me financially and i learnt my computer basics.</p><p>Along with my college, i used to learn computer programming and graphics design. After finishing my course i used to teach computer which helped me earn my pocket money.</p><p>After my graduation, I had decided to stay with my mother in Delhi.</p><p>I am very thankful to Vikas and Aparna Gupta for providing me accommodation, food and all financial support they provided. They suggested and encouraged me, they are so nice and they allowed me to join their company and they paid all my CAD training fees.</p><p>I trained in CAD for 6 months. I leaned how textile manufacturing works which i never knew before.</p><p>In the office, I never stop learning. In my free time i always learnt new things like web designing, programming, graphics etc. I always loved to play with computer.</p><p>I always helped my colleagues whatever technical support they needed .</p><p>Around my last month of the office, Aparna maa’m planned to launch her dream project BEACHBUM. She shared ideas with me that how much she is exited about BEACHMBUM.</p><p>I had decided to help her with all my efforts. We’ve planned all things from start to finish. I’ve helped her to build website for Beachbum and setup all technical things which i am good at such as coding website, building API’s for shipping, packing, payments etc.</p><p>For this entire process she and all our Beachbum team is equally responsible for good results.</p><p>Now everyone can see how much beautiful all BEACHBUM Collections are.</p><p>I’ve grown up here and spend more than 10 years in SND INC v happily.</p><p>I am very thankful to Vikas and Aparna Gupta, they guided and helped this small town boy and treated me as their own son. They help me to grow mentally, spiritually and financially. Lots of respect and very honored to work with them.</p>",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "heading_3AcrWm",
+        "text_Q8xjXa"
+      ],
+      "custom_css": [
+        ".media>img {object-fit: contain!important;}"
+      ],
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "image": "shopify://shop_images/55739073.jpg",
+        "height": "small",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "image_behavior": "none",
+        "content_layout": "no-overlap",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "",
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "image_with_text_nNzHKw",
+    "image_with_text_aBw3qf",
+    "image_with_text_id9xhE",
+    "image_with_text_V3RwQ7"
+  ]
+}

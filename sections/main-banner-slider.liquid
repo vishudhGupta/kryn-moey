@@ -1,0 +1,213 @@
+{% comment %}
+  Banner Slider – responsive (auto-rotating, looping)
+  Uses component-slider.css (scroll-snap)
+{% endcomment %}
+{{ 'component-slider.css' | asset_url | stylesheet_tag }}
+<section class="bb-banner-slider color-{{ section.settings.color_scheme }} gradient">
+  <slider-component class="{% if section.settings.full_width == false %}page-width{% endif %}">
+    <div
+      id="Slider-{{ section.id }}"
+      class="slider slider--everywhere"
+      role="list"
+      aria-label="Banner slider"
+    >
+      {%- for block in section.blocks -%}
+        {%- assign desktop_img = block.settings.desktop_image -%}
+        {%- assign mobile_img  = block.settings.mobile_image | default: desktop_img -%}
+
+        <div
+          id="Slide-{{ section.id }}-{{ forloop.index }}"
+          class="slider__slide bb-banner-slide"
+          role="group"
+          aria-roledescription="slide"
+          aria-label="{{ forloop.index }} of {{ section.blocks.size }}"
+          tabindex="-1"
+          {{ block.shopify_attributes }}
+        >
+          {% if block.settings.link != blank %}
+          <a href="{{ block.settings.link }}" class="bb-banner-link" aria-label="Slide {{ forloop.index }}">
+          {% endif %}
+
+            <picture>
+              {%- if mobile_img != blank -%}
+                <source
+                  media="(max-width: 749px)"
+                  srcset="
+                    {{ mobile_img | image_url: width: 1500 }} 1500w,
+                    {{ mobile_img | image_url: width: 1100 }} 1100w,
+                    {{ mobile_img | image_url: width: 750  }} 750w,
+                    {{ mobile_img | image_url: width: 550  }} 550w,
+                    {{ mobile_img | image_url: width: 375  }} 375w
+                  "
+                  sizes="100vw">
+              {%- endif -%}
+
+              {%- if desktop_img != blank -%}
+                {{ desktop_img
+                  | image_url: width: 3840
+                  | image_tag:
+                      loading: 'lazy',
+                      sizes: '100vw',
+                      widths: '750, 1100, 1500, 1780, 2000, 3000, 3840',
+                      alt: block.settings.alt_text | escape
+                }}
+              {%- else -%}
+                {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </picture>
+
+          {% if block.settings.link != blank %}
+          </a>
+          {% endif %}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.blocks.size > 1 -%}
+      <div class="slider-buttons">
+        <button
+          type="button"
+          class="slider-button slider-button--prev"
+          aria-label="Previous slide"
+          aria-controls="Slider-{{ section.id }}"
+        >
+          <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+        </button>
+
+        <button
+          type="button"
+          class="slider-button slider-button--next"
+          aria-label="Next slide"
+          aria-controls="Slider-{{ section.id }}"
+        >
+          <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+        </button>
+      </div>
+    {%- endif -%}
+  </slider-component>
+
+  <style>
+    
+    .bb-banner-slider .slider {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+    }
+    .bb-banner-slider .slider__slide {
+      flex: 0 0 100%;
+      width: 100%;
+      scroll-snap-align: start;
+    }
+    .bb-banner-slide picture,
+    .bb-banner-slide img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .bb-banner-link { display: block; text-decoration: none; }
+  </style>
+
+<script>
+(() => {
+  const track = document.querySelector('#Slider-{{ section.id }}');
+  if (!track) return;
+
+  const slides = Array.from(track.querySelectorAll('.slider__slide'));
+  if (slides.length <= 1) return;
+
+  const prevBtn = track.closest('.bb-banner-slider')?.querySelector('.slider-button--prev');
+  const nextBtn = track.closest('.bb-banner-slider')?.querySelector('.slider-button--next');
+
+  let index = 0;
+  let timer = null;
+  const INTERVAL = 3000;
+
+  // --- core: scroll the TRACK (not the page) ---
+  function goTo(i) {
+    index = (i + slides.length) % slides.length;
+    const targetLeft = slides[index].offsetLeft;  // slide's position inside the track
+    track.scrollTo({ left: targetLeft, behavior: 'smooth' });
+  }
+
+  // keep index in sync when user swipes/drags
+  let deb;
+  track.addEventListener('scroll', () => {
+    clearTimeout(deb);
+    deb = setTimeout(() => {
+      // find nearest slide by offset
+      const left = track.scrollLeft;
+      let nearest = 0, min = Infinity;
+      slides.forEach((s, idx) => {
+        const d = Math.abs(s.offsetLeft - left);
+        if (d < min) { min = d; nearest = idx; }
+      });
+      index = nearest;
+    }, 80);
+  }, { passive: true });
+
+  // autoplay
+  function start() { stop(); timer = setInterval(() => goTo(index + 1), INTERVAL); }
+  function stop()  { if (timer) clearInterval(timer); timer = null; }
+
+  // wire arrows
+  if (nextBtn) nextBtn.addEventListener('click', () => { stop(); goTo(index + 1); start(); });
+  if (prevBtn) prevBtn.addEventListener('click', () => { stop(); goTo(index - 1); start(); });
+
+  // pause on interaction; resume after a beat
+  const pause = () => stop();
+  const resume = () => { clearTimeout(resume._t); resume._t = setTimeout(start, 800); };
+  ['mouseenter','focusin','touchstart','pointerdown','wheel'].forEach(e =>
+    track.addEventListener(e, pause, { passive: true })
+  );
+  ['mouseleave','focusout','touchend','pointerup'].forEach(e =>
+    track.addEventListener(e, resume, { passive: true })
+  );
+
+  // keep alignment correct on resize (width changes)
+  window.addEventListener('resize', () => goTo(index));
+
+  // go!
+  start();
+})();
+</script>
+
+
+</section>
+
+{% schema %}
+{
+  "name": "Banner Slider",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "limit": 25,
+      "settings": [
+        { "type": "image_picker", "id": "desktop_image", "label": "Desktop image" },
+        { "type": "image_picker", "id": "mobile_image", "label": "Mobile image (optional)" },
+        { "type": "text", "id": "alt_text", "label": "Alt text" },
+        { "type": "url", "id": "link", "label": "Slide link" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Banner Slider (Auto, Responsive)" }]
+}
+{% endschema %}

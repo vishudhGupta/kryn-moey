@@ -1,0 +1,29 @@
+{%- comment -%}
+  Minimal inline search bar (no modal). Drop with:
+  {% render 'custom-search-bar' %}
+{%- endcomment -%}
+
+<div class="custom-search">
+  <form action="{{ routes.search_url }}" method="get" role="search" class="custom-search__form">
+    <label class="visually-hidden" for="{{ input_id | default: 'Search-In-Header' }}">Search</label>
+    <input
+      id="{{ input_id | default: 'Search-In-Header' }}"
+      class="custom-search__input"
+      type="search"
+      name="q"
+      placeholder="Type to Search"
+      value="{{ search.terms | escape }}"
+      autocapitalize="off"
+      autocomplete="off"
+      autocorrect="off"
+      aria-label="Search"
+    >
+    <button class="custom-search__button" type="submit" aria-label="Search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+        <path d="M20 20L16.5 16.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <input type="hidden" name="type" value="product">
+  </form>
+</div>
