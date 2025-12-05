@@ -1,5 +1,5 @@
 <style>
-    .delivery-box {
+.delivery-box {
   background: #f8fafc;
   padding: 14px 16px;
   border-radius: 10px;
@@ -19,28 +19,46 @@
 .delivery-row:last-child {
   margin-bottom: 0;
 }
+
 </style>
 {% assign today = 'now' | date: "%s" %}
 {% assign seconds_in_day = 86400 %}
 
-{%- comment -%} Delivery date calculations {%- endcomment -%}
-{% assign dncr_start = today | plus: seconds_in_day | plus: seconds_in_day | date: "%b %d" %}
-{% assign dncr_end = today | plus: seconds_in_day | plus: seconds_in_day | plus: seconds_in_day | date: "%b %d" %}
+{%- comment -%}
+  Compute day offsets properly:
+  offset_N = seconds_in_day * N
+  final_timestamp = today + offset_N
+{%- endcomment -%}
 
-{% assign pan_start = today | plus: seconds_in_day | times: 5 | date: "%b %d" %}
-{% assign pan_end = today | plus: seconds_in_day | times: 7 | date: "%b %d" %}
+{%- assign dncr_start_offset = seconds_in_day | times: 2 -%}
+{%- assign dncr_end_offset   = seconds_in_day | times: 3 -%}
 
-{% assign intl_start = today | plus: seconds_in_day | times: 15 | date: "%b %d" %}
-{% assign intl_end = today | plus: seconds_in_day | times: 25 | date: "%b %d" %}
+{%- assign pan_start_offset  = seconds_in_day | times: 5 -%}
+{%- assign pan_end_offset    = seconds_in_day | times: 7 -%}
+
+{%- assign intl_start_offset = seconds_in_day | times: 15 -%}
+{%- assign intl_end_offset   = seconds_in_day | times: 25 -%}
+
+{%- assign dncr_start = today | plus: dncr_start_offset | date: "%b %d" -%}
+{%- assign dncr_end   = today | plus: dncr_end_offset   | date: "%b %d" -%}
+
+{%- assign pan_start  = today | plus: pan_start_offset  | date: "%b %d" -%}
+{%- assign pan_end    = today | plus: pan_end_offset    | date: "%b %d" -%}
+
+{%- assign intl_start = today | plus: intl_start_offset | date: "%b %d" -%}
+{%- assign intl_end   = today | plus: intl_end_offset   | date: "%b %d" -%}
 
 <div class="delivery-box">
   <div class="delivery-row">
-    🚚🇮🇳 <span>Delivery Delhi NCR:</span> <strong>{{ dncr_start }} — {{ dncr_end }}</strong>
+    🚚🇮🇳 <span>Delivery Delhi NCR:</span>
+    <strong>{{ dncr_start }} — {{ dncr_end }}</strong>
   </div>
   <div class="delivery-row">
-    🚛📍 <span>Delivery PAN India:</span> <strong>{{ pan_start }} — {{ pan_end }}</strong>
+    📍🚛 <span>Delivery PAN India:</span>
+    <strong>{{ pan_start }} — {{ pan_end }}</strong>
   </div>
   <div class="delivery-row">
-    ✈️🌎 <span>International Delivery:</span> <strong>{{ intl_start }} — {{ intl_end }}</strong>
+    ✈️🌍 <span>International Delivery:</span>
+    <strong>{{ intl_start }} — {{ intl_end }}</strong>
   </div>
 </div>
