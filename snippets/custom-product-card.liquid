@@ -71,7 +71,6 @@
         loading="{{ loading_value }}"
       >
     </a>
-    <button class="cpc-wish" type="button" aria-label="Wishlist">♡</button>
   </div>
 
   <div class="cpc-body">
@@ -193,7 +192,7 @@
     flex-direction: column;
     border: 1px solid #e6e6e6;
     border-radius: 14px;
-    background: #fff;
+    background: #F7EAEB;
     overflow: hidden;
     height: 100%;
   }
@@ -216,21 +215,6 @@
     padding: 4px 8px;
     border-radius: 4px;
   }
-  .cpc-wish {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #fff;
-    border: 0;
-    font-size: 18px;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
 
   /* --- Content --- */
   .cpc-body {
@@ -247,6 +231,7 @@
     margin: 6px 0 4px;
     min-height: 2.8em;
     overflow: hidden;
+    color: #5E3F44;
   }
 
   /* --- Price + Variants --- */
@@ -257,7 +242,7 @@
   .cpc-price-now {
     font-weight: 600;
     font-size: 14px;
-    color: #111;
+    color: #5E3F44;
   }
   .cpc-price-was {
     font-size: 13px;
@@ -274,16 +259,17 @@
     font-size: 13px;
     border: 1px solid #ccc;
     border-radius: 999px;
-    background: #fff;
+    background: #F7EAEB;
     min-width: 70px;
     max-width: 90px;
     appearance: none;
-    background-image: linear-gradient(45deg, transparent 50%, #111 50%),
-      linear-gradient(135deg, #111 50%, transparent 50%);
+    background-image: linear-gradient(45deg, transparent 50%, #5E3F44 50%),
+      linear-gradient(135deg, #5E3F44 50%, transparent 50%);
     background-position: calc(100% - 15px) center, calc(100% - 10px) center;
     background-size: 5px 5px, 5px 5px;
     background-repeat: no-repeat;
     cursor: pointer;
+    color: #5E3F44;
   }
 
   /* --- Buttons --- */
@@ -304,17 +290,17 @@
     transition: 0.2s ease;
   }
   .cpc-btn--outline {
-    background: #fff;
-    border-color: #111;
-    color: #111;
+    background: #F7EAEB;
+    border-color: #A47E82;
+    color: #5E3F44;
   }
   .cpc-btn--solid {
-    background: #111;
-    color: #fff;
+    background: #A47E82;
+    color: #F7EAEB;
   }
   .cpc-btn--outline:hover {
-    background: #111;
-    color: #fff;
+    background: #A47E82;
+    color: #F7EAEB;
   }
   .cpc-btn--solid:hover {
     opacity: 0.9;
@@ -365,19 +351,19 @@
 
     /* Style consistency */
     .cpc--collection .cpc-btn--outline {
-      background: #fff !important;
-      border: 1px solid #111 !important;
-      color: #111 !important;
+      background: #F7EAEB !important;
+      border: 1px solid #A47E82 !important;
+      color: #5E3F44 !important;
     }
 
     .cpc--collection .cpc-btn--solid {
-      background: #111 !important;
-      color: #fff !important;
+      background: #A47E82 !important;
+      color: #F7EAEB !important;
     }
 
     .cpc--collection .cpc-btn--outline:hover {
-      background: #111 !important;
-      color: #fff !important;
+      background: #A47E82 !important;
+      color: #F7EAEB !important;
     }
 
     .cpc--collection .cpc-btn--solid:hover {
